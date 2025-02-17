@@ -85,10 +85,16 @@ tfm_num<-tfm[, sapply(tfm, is.numeric)]
 summary_tratamiento_SLS3 <- aggregate(. ~ tfm$Tratamiento, data = tfm_num, FUN = function(x) c(Mean = mean(x, na.rm = TRUE), SD = sd(x, na.rm = TRUE), Median = median(x, na.rm = TRUE), Min = min(x, na.rm = TRUE), Max = max(x, na.rm = TRUE)))
 print(summary_tratamiento_SLS3)
 
+shapiro.test(tfm$ALT0combo)
+shapiro.test(tfm$ALT1combo)
+shapiro.test(tfm$ALT3combo)
+shapiro.test(tfm$SLS0combo)
+shapiro.test(tfm$SLS1combo)
+shapiro.test(tfm$SLS3combo)
 ####diferencias pre y post-tratamiento intragrupo en grupos de muestra pequeña
-                             ######## T STUDENT##################
-### fase 1 manual izquierda
-tfm_manual <- subset(tfm, Tratamiento == "0")
+######## T STUDENT##################
+### fase 1 manual 
+tfm_manual <- subset(tfm, Tratamiento == "manual")
 tfm_manual$FD_Combo <- ifelse(is.na(tfm_manual$ALT0derecha), tfm_manual$ALT0izquierda, ifelse(is.na(tfm_manual$ALT0izquierda), tfm_manual$ALT0derecha, (tfm_manual$ALT0derecha + tfm_manual$ALT0izquierda) / 2))
 tfm_manual$FD_Combo <- tfm_manual$FD_Combo[complete.cases(tfm_manual$FD_Combo)]
 print(tfm_manual$FD_Combo)
@@ -110,7 +116,7 @@ resultado_t_test <- t.test(pre_manual_sin_na, post_manual_sin_na, paired = TRUE,
 print(resultado_t_test) ###no diferencia significativa
 
 
-tfm_manual <- subset(tfm, Tratamiento == "0")
+tfm_manual <- subset(tfm, Tratamiento == "manual")
 
 
 tfm_manual$SLS_Combo <- ifelse(is.na(tfm_manual$SLS0derecha), tfm_manual$SLS0izquierda, ifelse(is.na(tfm_manual$SLS0izquierda), tfm_manual$SLS0derecha, (tfm_manual$SLS0derecha + tfm_manual$SLS0izquierda) / 2))
@@ -129,26 +135,8 @@ resultado_t_test <- t.test(pre_manual_sin_na, post_manual_sin_na, paired = TRUE,
 print(resultado_t_test) 
 ####no significativo
 
-
-####fase 1 manual derecha  
-pre_manual<-tfm_manual$ALT0derecha
-pre_manual_sin_na <- ifelse(is.na(pre_manual), NA, pre_manual)
-post_manual <-tfm_manual$ALT1derecha
-post_manual_sin_na <- ifelse(is.na(post_manual), NA, post_manual)
-resultado_t_test <- t.test(pre_manual_sin_na, post_manual_sin_na, paired = TRUE, na.rm = TRUE)
-print(resultado_t_test)
-#No diferencia significativa
-
-pre_manual<-tfm_manual$SLS0derecha
-pre_manual_sin_na <- ifelse(is.na(pre_manual), NA, pre_manual)
-post_manual <-tfm_manual$SLS1derecha
-post_manual_sin_na <- ifelse(is.na(post_manual), NA, post_manual)
-resultado_t_test <- t.test(pre_manual_sin_na, post_manual_sin_na, paired = TRUE, na.rm = TRUE)
-print(resultado_t_test) #### no significativo
-
-
-#####fase 1 ejercicio izquierda
-tfm_ejercicio <- subset(tfm, Tratamiento == "1")
+#####fase 1 ejercicio 
+tfm_ejercicio <- subset(tfm, Tratamiento == "ejercicio")
 tfm_ejercicio$FD_Combo <- ifelse(is.na(tfm_ejercicio$ALT0derecha), tfm_ejercicio$ALT0izquierda, ifelse(is.na(tfm_ejercicio$ALT0izquierda), tfm_ejercicio$ALT0derecha, (tfm_ejercicio$ALT0derecha + tfm_ejercicio$ALT0izquierda) / 2))
 tfm_ejercicio$FD_Combo <- tfm_ejercicio$FD_Combo[complete.cases(tfm_ejercicio$FD_Combo)]
 tfm_ejercicio$FD_Combo1 <- ifelse(is.na(tfm_ejercicio$ALT1derecha), tfm_ejercicio$ALT1izquierda, ifelse(is.na(tfm_ejercicio$ALT1izquierda), tfm_ejercicio$ALT1derecha, (tfm_ejercicio$ALT1derecha + tfm_ejercicio$ALT1izquierda) / 2))
@@ -158,9 +146,9 @@ pre_ejercicio_sin_na <- ifelse(is.na(pre_ejercicio), NA, pre_ejercicio)
 post_ejercicio<-tfm_ejercicio$FD_Combo1
 post_ejercicio_sin_na <- ifelse(is.na(post_ejercicio), NA, post_ejercicio)
 resultado_t_test <- t.test(pre_ejercicio_sin_na, post_ejercicio_sin_na, paired = TRUE, na.rm = TRUE)
-print(resultado_t_test) ##no diferencia significativa
+print(resultado_t_test)#### diferencia significativa
 
-tfm_ejercicio <- subset(tfm, Tratamiento == "1")
+tfm_ejercicio <- subset(tfm, Tratamiento == "ejercicio")
 tfm_ejercicio$SLS_Combo <- ifelse(is.na(tfm_ejercicio$SLS0derecha), tfm_ejercicio$SLS0izquierda, ifelse(is.na(tfm_ejercicio$SLS0izquierda), tfm_ejercicio$SLS0derecha, (tfm_ejercicio$SLS0derecha + tfm_ejercicio$SLS0izquierda) / 2))
 tfm_ejercicio$SLS_Combo <- tfm_ejercicio$SLS_Combo[complete.cases(tfm_ejercicio$SLS_Combo)]
 tfm_ejercicio$SLS_Combo1 <- ifelse(is.na(tfm_ejercicio$SLS1derecha), tfm_ejercicio$SLS1izquierda, ifelse(is.na(tfm_ejercicio$SLS1izquierda), tfm_ejercicio$SLS1derecha, (tfm_ejercicio$SLS1derecha + tfm_ejercicio$SLS1izquierda) / 2))
@@ -172,26 +160,8 @@ post_ejercicio<-tfm_ejercicio$SLS_Combo1
 post_ejercicio_sin_na <- ifelse(is.na(post_ejercicio), NA, post_ejercicio)
 resultado_t_test <- t.test(pre_ejercicio_sin_na, post_ejercicio_sin_na, paired = TRUE, na.rm = TRUE)
 print(resultado_t_test) ###no diferencia significativa
-
-
-##Fase 1 ejercicio derecha
-pre_ejercicio<-tfm_ejercicio$ALT0derecha
-post_ejercicio<-tfm_ejercicio$ALT1derecha
-pre_ejercicio_sin_na <- ifelse(is.na(pre_ejercicio), NA, pre_ejercicio)
-post_ejercicio_sin_na <- ifelse(is.na(post_ejercicio), NA, post_ejercicio)
-resultado_t_test <- t.test(pre_ejercicio_sin_na, post_ejercicio_sin_na, paired = TRUE, na.rm = TRUE)
-print(resultado_t_test)## significativo
-
-tfm_ejercicio <- subset(tfm, Tratamiento == "1")
-pre_ejercicio<-tfm_ejercicio$ALT0derecha
-pre_ejercicio_sin_na <- ifelse(is.na(pre_ejercicio), NA, pre_ejercicio)
-post_ejercicio<-tfm_ejercicio$ALT1derecha
-post_ejercicio_sin_na <- ifelse(is.na(post_ejercicio), NA, post_ejercicio)
-resultado_t_test <- t.test(pre_ejercicio_sin_na, post_ejercicio_sin_na, paired = TRUE, na.rm = TRUE)
-print(resultado_t_test)  ##### diferencia significativa
-
-###Fase 1 control izquierda
-tfm_control <- subset(tfm, Tratamiento == "2")
+###Fase 1 control 
+tfm_control <- subset(tfm, Tratamiento == "manual")
 tfm_control$FD_Combo <- ifelse(is.na(tfm_control$ALT0derecha), tfm_control$ALT0izquierda, ifelse(is.na(tfm_control$ALT0izquierda), tfm_control$ALT0derecha, (tfm_control$ALT0derecha + tfm_control$ALT0izquierda) / 2))
 tfm_control$FD_Combo <- tfm_control$FD_Combo[complete.cases(tfm_control$FD_Combo)]
 tfm_control$FD_Combo1 <- ifelse(is.na(tfm_control$ALT1derecha), tfm_control$ALT1izquierda, ifelse(is.na(tfm_control$ALT1izquierda), tfm_control$ALT1derecha, (tfm_control$ALT1derecha + tfm_control$ALT1izquierda) / 2))
@@ -203,7 +173,7 @@ post_control_sin_na <- ifelse(is.na(post_control), NA, post_control)
 resultado_t_test <- t.test(pre_control_sin_na, post_control_sin_na, paired = TRUE, na.rm = TRUE)
 print(resultado_t_test)## no significativo
 
-tfm_control <- subset(tfm, Tratamiento == "2")
+tfm_control <- subset(tfm, Tratamiento == "manual")
 tfm_control$SLS_Combo <- ifelse(is.na(tfm_control$SLS0derecha), tfm_control$SLS0izquierda, ifelse(is.na(tfm_control$SLS0izquierda), tfm_control$SLS0derecha, (tfm_control$SLS0derecha + tfm_control$SLS0izquierda) / 2))
 tfm_control$SLS_Combo <- tfm_control$SLS_Combo[complete.cases(tfm_control$SLS_Combo)]
 tfm_control$SLS_Combo1 <- ifelse(is.na(tfm_control$SLS1derecha), tfm_control$SLS1izquierda, ifelse(is.na(tfm_control$SLS1izquierda), tfm_control$SLS1derecha, (tfm_control$SLS1derecha + tfm_control$SLS1izquierda) / 2))
@@ -214,28 +184,8 @@ pre_control_sin_na <- ifelse(is.na(pre_control), NA, pre_control)
 post_control_sin_na <- ifelse(is.na(post_control), NA, post_control)
 resultado_t_test <- t.test(pre_control_sin_na, post_control_sin_na, paired = TRUE, na.rm = TRUE)
 print(resultado_t_test) #### no significativo
-
-
-###Fase 1 control derecha
-pre_control<-tfm_control$ALT0derecha
-post_control<-tfm_control$ALT1derecha
-pre_control_sin_na <- ifelse(is.na(pre_control), NA, pre_control)
-post_control_sin_na <- ifelse(is.na(post_control), NA, post_control)
-resultado_t_test <- t.test(pre_control_sin_na, post_control_sin_na, paired = TRUE,  na.rm = TRUE)
-print(resultado_t_test) ###### no significativo
-
-tfm_control <- subset(tfm, Tratamiento == "2")
-pre_control<-tfm_control$SLS0derecha
-post_control<-tfm_control$SLS1derecha
-pre_control_sin_na <- ifelse(is.na(pre_control), NA, pre_control)
-post_control_sin_na <- ifelse(is.na(post_control), NA, post_control)
-resultado_t_test <- t.test(pre_control_sin_na, post_control_sin_na, paired = TRUE, na.rm = TRUE)
-print(resultado_t_test) ######## no significativo
-
-
-
-####FASE 2 manual izquierda
-tfm_manual <- subset(tfm, Tratamiento == "0")
+####FASE 2 manual 
+tfm_manual <- subset(tfm, Tratamiento == "manual")
 tfm_manual$FD_Combo <- ifelse(is.na(tfm_manual$ALT0derecha), tfm_manual$ALT0izquierda, ifelse(is.na(tfm_manual$ALT0izquierda), tfm_manual$ALT0derecha, (tfm_manual$ALT0derecha + tfm_manual$ALT0izquierda) / 2))
 tfm_manual$FD_Combo <- tfm_manual$FD_Combo[complete.cases(tfm_manual$FD_Combo)]
 tfm_manual$FD_Combo3 <- ifelse(is.na(tfm_manual$ALT3derecha), tfm_manual$ALT3izquierda, ifelse(is.na(tfm_manual$ALT3izquierda), tfm_manual$ALT3derecha, (tfm_manual$ALT3derecha + tfm_manual$ALT3izquierda) / 2))
@@ -247,7 +197,7 @@ post_manual_sin_na <- ifelse(is.na(post_manual), NA, post_manual)
 resultado_t_test <- t.test(pre_manual_sin_na, post_manual_sin_na, paired = TRUE, na.rm = TRUE)
 print(resultado_t_test) ## no significativo
 
-tfm_manual <- subset(tfm, Tratamiento == "0")
+tfm_manual <- subset(tfm, Tratamiento == "manual")
 tfm_manual$SLS_Combo <- ifelse(is.na(tfm_manual$SLS0derecha), tfm_manual$SLS0izquierda, ifelse(is.na(tfm_manual$SLS0izquierda), tfm_manual$SLS0derecha, (tfm_manual$SLS0derecha + tfm_manual$SLS0izquierda) / 2))
 tfm_manual$SLS_Combo <- tfm_manual$SLS_Combo[complete.cases(tfm_manual$SLS_Combo)]
 tfm_manual$SLS_Combo3 <- ifelse(is.na(tfm_manual$SLS3derecha), tfm_manual$SLS3izquierda, ifelse(is.na(tfm_manual$SLS3izquierda), tfm_manual$SLS3derecha, (tfm_manual$SLS3derecha + tfm_manual$SLS3izquierda) / 2))
@@ -258,29 +208,8 @@ pre_manual_sin_na <- ifelse(is.na(pre_manual), NA, pre_manual)
 post_manual_sin_na <- ifelse(is.na(post_manual), NA, post_manual)
 resultado_t_test <- t.test(pre_manual_sin_na, post_manual_sin_na, paired = TRUE, na.rm = TRUE)
 print(resultado_t_test) #### no significativo
-
-####FASE 2 manual derecha
-tfm_manual <- subset(tfm, Tratamiento == "0")
-pre_manual<-tfm_manual$ALT0derecha
-post_manual<-tfm_manual$ALT3derecha
-pre_manual_sin_na <- ifelse(is.na(pre_manual), NA, pre_manual)
-post_manual_sin_na <- ifelse(is.na(post_manual), NA, post_manual)
-resultado_t_test <- t.test(pre_manual_sin_na, post_manual_sin_na, paired = TRUE, na.rm = TRUE)
-print(resultado_t_test) #### no significativo
-
-
-
-tfm_manual <- subset(tfm, Tratamiento == "0")
-pre_manual<-tfm_manual$SLS0derecha
-post_manual<-tfm_manual$SLS3derecha
-pre_manual_sin_na <- ifelse(is.na(pre_manual), NA, pre_manual)
-post_manual_sin_na <- ifelse(is.na(post_manual), NA, post_manual)
-resultado_t_test <- t.test(pre_manual_sin_na, post_manual_sin_na, paired = TRUE, na.rm = TRUE)
-print(resultado_t_test) #### no significativo
-
-
-####FASE 2 ejercicio izquierda
-tfm_ejercicio <- subset(tfm, Tratamiento == "1")
+####FASE 2 ejercicio 
+tfm_ejercicio <- subset(tfm, Tratamiento == "ejercicio")
 tfm_ejercicio$FD_Combo <- ifelse(is.na(tfm_ejercicio$ALT0derecha), tfm_ejercicio$ALT0izquierda, ifelse(is.na(tfm_ejercicio$ALT0izquierda), tfm_ejercicio$ALT0derecha, (tfm_ejercicio$ALT0derecha + tfm_ejercicio$ALT0izquierda) / 2))
 tfm_ejercicio$FD_Combo <- tfm_ejercicio$FD_Combo[complete.cases(tfm_ejercicio$FD_Combo)]
 tfm_ejercicio$FD_Combo3 <- ifelse(is.na(tfm_ejercicio$ALT3derecha), tfm_ejercicio$ALT3izquierda, ifelse(is.na(tfm_ejercicio$ALT3izquierda), tfm_ejercicio$ALT3derecha, (tfm_ejercicio$ALT3derecha + tfm_ejercicio$ALT3izquierda) / 2))
@@ -292,7 +221,7 @@ post_ejercicio_sin_na <- ifelse(is.na(post_ejercicio), NA, post_ejercicio)
 resultado_t_test <- t.test(pre_ejercicio_sin_na, post_ejercicio_sin_na, paired = TRUE, na.rm = TRUE)
 print(resultado_t_test) #estadisticamente significativo 
 
-tfm_ejercicio <- subset(tfm, Tratamiento == "1")
+tfm_ejercicio <- subset(tfm, Tratamiento == "ejercicio")
 tfm_ejercicio$SLS_Combo <- ifelse(is.na(tfm_ejercicio$SLS0derecha), tfm_ejercicio$SLS0izquierda, ifelse(is.na(tfm_ejercicio$SLS0izquierda), tfm_ejercicio$SLS0derecha, (tfm_ejercicio$SLS0derecha + tfm_ejercicio$SLS0izquierda) / 2))
 tfm_ejercicio$SLS_Combo <- tfm_ejercicio$SLS_Combo[complete.cases(tfm_ejercicio$SLS_Combo)]
 tfm_ejercicio$SLS_Combo3 <- ifelse(is.na(tfm_ejercicio$SLS3derecha), tfm_ejercicio$SLS3izquierda, ifelse(is.na(tfm_ejercicio$SLS3izquierda), tfm_ejercicio$SLS3derecha, (tfm_ejercicio$SLS3derecha + tfm_ejercicio$SLS3izquierda) / 2))
@@ -303,27 +232,8 @@ pre_ejercicio_sin_na <- ifelse(is.na(pre_ejercicio), NA, pre_ejercicio)
 post_ejercicio_sin_na <- ifelse(is.na(post_ejercicio), NA, post_ejercicio)
 resultado_t_test <- t.test(pre_ejercicio_sin_na, post_ejercicio_sin_na, paired = TRUE, na.rm = TRUE)
 print(resultado_t_test) #### no significativo
-
-####FASE 2 ejercicio derecha
-tfm_ejercicio <- subset(tfm, Tratamiento == "1")
-pre_ejercicio<-tfm_ejercicio$ALT0derecha
-post_ejercicio<-tfm_ejercicio$ALT3derecha
-pre_ejercicio_sin_na <- ifelse(is.na(pre_ejercicio), NA, pre_ejercicio)
-post_ejercicio_sin_na <- ifelse(is.na(post_ejercicio), NA, post_ejercicio)
-resultado_t_test <- t.test(pre_ejercicio_sin_na, post_ejercicio_sin_na, paired = TRUE, na.rm = TRUE)
-print(resultado_t_test) ### estadisticamente significativo
-
-tfm_ejercicio <- subset(tfm, Tratamiento == "1")
-pre_ejercicio<-tfm_ejercicio$SLS0derecha
-post_ejercicio<-tfm_ejercicio$SLS3derecha
-pre_ejercicio_sin_na <- ifelse(is.na(pre_ejercicio), NA, pre_ejercicio)
-post_ejercicio_sin_na <- ifelse(is.na(post_ejercicio), NA, post_ejercicio)
-resultado_t_test <- t.test(pre_ejercicio_sin_na, post_ejercicio_sin_na, paired = TRUE, na.rm = TRUE)
-print(resultado_t_test) ##### no significativo
-
-
-####FASE 2 control izquierda
-tfm_control <- subset(tfm, Tratamiento == "2")
+####FASE 2 control 
+tfm_control <- subset(tfm, Tratamiento == "control")
 tfm_control$FD_Combo <- ifelse(is.na(tfm_control$ALT0derecha), tfm_control$ALT0izquierda, ifelse(is.na(tfm_control$ALT0izquierda), tfm_control$ALT0derecha, (tfm_control$ALT0derecha + tfm_control$ALT0izquierda) / 2))
 tfm_control$FD_Combo <- tfm_control$FD_Combo[complete.cases(tfm_control$FD_Combo)]
 tfm_control$FD_Combo3 <- ifelse(is.na(tfm_control$ALT3derecha), tfm_control$ALT3izquierda, ifelse(is.na(tfm_control$ALT3izquierda), tfm_control$ALT3derecha, (tfm_control$ALT3derecha + tfm_control$ALT3izquierda) / 2))
@@ -333,9 +243,9 @@ post_control<-tfm_control$FD_Combo3
 pre_control_sin_na <- ifelse(is.na(pre_control), NA, pre_control)
 post_control_sin_na <- ifelse(is.na(post_control), NA, post_control)
 resultado_t_test <- t.test(pre_control_sin_na, post_control_sin_na, paired = TRUE,  na.rm = TRUE)
-print(resultado_t_test)####no significativo
+print(resultado_t_test)#### significativo
 
-tfm_control <- subset(tfm, Tratamiento == "2")
+tfm_control <- subset(tfm, Tratamiento == "control")
 tfm_control$SLS_Combo <- ifelse(is.na(tfm_control$SLS0derecha), tfm_control$SLS0izquierda, ifelse(is.na(tfm_control$SLS0izquierda), tfm_control$SLS0derecha, (tfm_control$SLS0derecha + tfm_control$SLS0izquierda) / 2))
 tfm_control$SLS_Combo <- tfm_control$SLS_Combo[complete.cases(tfm_control$SLS_Combo)]
 tfm_control$SLS_Combo3 <- ifelse(is.na(tfm_control$SLS3derecha), tfm_control$SLS3izquierda, ifelse(is.na(tfm_control$SLS3izquierda), tfm_control$SLS3derecha, (tfm_control$SLS3derecha + tfm_control$SLS3izquierda) / 2))
@@ -346,29 +256,6 @@ pre_control_sin_na <- ifelse(is.na(pre_control), NA, pre_control)
 post_control_sin_na <- ifelse(is.na(post_control), NA, post_control)
 resultado_t_test <- t.test(pre_control_sin_na, post_control_sin_na, paired = TRUE,  na.rm = TRUE)
 print(resultado_t_test)##### no significativa
-
-
-####FASE 2 control derecha
-tfm_control <- subset(tfm, Tratamiento == "2")
-pre_control<-tfm_control$ALT0derecha
-post_control<-tfm_control$ALT1derecha
-pre_control_sin_na <- ifelse(is.na(pre_control), NA, pre_control)
-post_control_sin_na <- ifelse(is.na(post_control), NA, post_control)
-resultado_t_test <- t.test(pre_control_sin_na, post_control_sin_na, paired = TRUE,  na.rm = TRUE)
-print(resultado_t_test) #### no significativo
-
-tfm_control <- subset(tfm, Tratamiento == "2")
-pre_control<-tfm_control$SLS0derecha
-post_control<-tfm_control$SLS3derecha
-pre_control_sin_na <- ifelse(is.na(pre_control), NA, pre_control)
-post_control_sin_na <- ifelse(is.na(post_control), NA, post_control)
-resultado_t_test <- t.test(pre_control_sin_na, post_control_sin_na, paired = TRUE,  na.rm = TRUE)
-print(resultado_t_test) #### no significativo
-
-
-
-
-
 ################################## BOXPLOT ################################
 ###FD TOBILLO FASE 1
 tfm$FD_Combo <- ifelse(is.na(tfm$ALT0derecha), tfm$ALT0izquierda, ifelse(is.na(tfm$ALT0izquierda), tfm$ALT0derecha, (tfm$ALT0derecha + tfm$ALT0izquierda) / 2))
